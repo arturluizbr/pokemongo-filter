@@ -4,53 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Go Search Criteria Generator</title>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>    
     <link rel="stylesheet" href="styles.css">
     <script src="script.js"></script>
 </head>
 <body>
-    <div class="ui container">
-        <h1 class="ui header">Pokémon Go Search Criteria Generator</h1>
+    <div class="container">
+        <h1 class="mt-5">Pokémon Go Search Criteria Generator</h1>
     
-        <div class="ui segment filter-section">
-            <h2 class="ui header">Filter Pokémon:</h2>
-            <div class="ui form">
-                <div class="field">
-                    <label>Type:</label>
-                    <select class="ui dropdown" id="type">
-                        <option value="all">All</option>
-                        <option value="fire">Fire</option>
-                        <option value="water">Water</option>
-                        <!-- Add more types as needed -->
-                    </select>
-                </div>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="card-title">Filter Pokémon:</h2>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label for="type">Type:</label>
+                        <select class="form-control" id="type">
+                            <option value="all">All</option>
+                            <option value="fire">Fire</option>
+                            <option value="water">Water</option>
+                            <!-- Add more types as needed -->
+                        </select>
+                    </div>
     
-                <div class="field">
-                    <label>CP Range:</label>
-                    <div class="two fields">
-                        <div class="field">
-                            <input type="number" id="minCP" placeholder="Min CP">
+                    <div class="form-row">
+                        <div class="col-md-6 form-group">
+                            <label for="minCP">Min CP:</label>
+                            <input type="number" class="form-control" id="minCP" placeholder="Min CP">
                         </div>
-                        <div class="field">
-                            <input type="number" id="maxCP" placeholder="Max CP">
+                        <div class="col-md-6 form-group">
+                            <label for="maxCP">Max CP:</label>
+                            <input type="number" class="form-control" id="maxCP" placeholder="Max CP">
                         </div>
                     </div>
-                </div>
     
-                <button class="ui blue button" id="generateButton">Generate Search Criteria</button>
+                    <button type="button" class="btn btn-primary" id="generateButton">Generate Search Criteria</button>
+                </form>
             </div>
         </div>
     
-        <div class="ui segment result-section">
-            <h2 class="ui header">Generated Search Criteria:</h2>
-            <div class="ui form">
-                <div class="field">
-                    <label>Search Criteria:</label>
-                    <textarea id="searchCriteria" readonly></textarea>
-                </div>
-                <button class="ui green button" id="copyButton">Copy to Clipboard</button>
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2 class="card-title">Generated Search Criteria:</h2>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-group">
+                        <label for="searchCriteria">Search Criteria:</label>
+                        <textarea class="form-control" id="searchCriteria" readonly></textarea>
+                    </div>
+                    <button type="button" class="btn btn-success" id="copyButton">Copy to Clipboard</button>
+                </form>
             </div>
         </div>
     </div>
