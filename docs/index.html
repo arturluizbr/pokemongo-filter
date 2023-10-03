@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
-            background-color: #FFE600; /* Pikachu yellow */
+            background-color: #F2F2F2; /* Light gray background */
             font-family: Arial, sans-serif;
         }
 
@@ -145,7 +145,7 @@
             }
 
             // Acionar a função sempre que um campo for alterado
-            $('.form-control').on('change', function() {
+            $(document).on('change', '.form-control', function() {
                 generateSearchCriteria();
             });
 
