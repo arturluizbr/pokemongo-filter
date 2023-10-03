@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Go Search Criteria Generator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Pokémon Go Search Criteria Generator</h1>
+
+    <div class="filter-section">
+        <h2>Filter Pokémon:</h2>
+        <label for="type">Type:</label>
+        <select id="type">
+            <option value="all">All</option>
+            <option value="fire">Fire</option>
+            <option value="water">Water</option>
+            <!-- Add more types as needed -->
+        </select>
+
+        <label for="cp">CP Range:</label>
+        <input type="number" id="minCP" placeholder="Min CP">
+        <input type="number" id="maxCP" placeholder="Max CP">
+        
+        <button id="generateButton">Generate Search Criteria</button>
+    </div>
+
+    <div class="result-section">
+        <h2>Generated Search Criteria:</h2>
+        <textarea id="searchCriteria" readonly></textarea>
+        <button id="copyButton">Copy to Clipboard</button>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
