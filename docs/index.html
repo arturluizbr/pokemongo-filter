@@ -65,17 +65,17 @@
                     // Construir a regra para este conjunto
                     let rule = '';
                     if (type !== 'all') {
-                        rule += `type:${type} `;
+                        rule += `type${type};`;
                     }
                     if (minCP !== '') {
-                        rule += `cp:${minCP}-${maxCP} `;
+                        rule += `cp${minCP}-${maxCP};`;
                     }
 
                     ruleSets.push(rule.trim());
                 });
 
-                // Unir todas as regras dos conjuntos
-                const criteria = ruleSets.join(', ');
+                // Unir todas as regras dos conjuntos com ;
+                const criteria = ruleSets.join(';');
 
                 $('#searchCriteria').val(criteria);
             }
