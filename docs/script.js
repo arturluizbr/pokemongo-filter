@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    // Initialize Semantic UI dropdown
+    $('.ui.dropdown').dropdown();
+
     // Function to generate search criteria
     function generateSearchCriteria() {
         const type = $('#type').val();
