@@ -1,35 +1,39 @@
 $(document).ready(function() {
-    // Initialize Semantic UI dropdown
-    $('.ui.dropdown').dropdown();
-
-    // Function to generate search criteria
     function generateSearchCriteria() {
-        const type = $('#type').val();
-        const minCP = $('#minCP').val();
-        const maxCP = $('#maxCP').val();
-        
-        let criteria = '';
-        
-        if (type !== 'all') {
-            criteria += `type:${type} `;
-        }
-        
-        if (minCP !== '') {
-            criteria += `cp:${minCP}-${maxCP} `;
-        }
-        
-        $('#searchCriteria').val(criteria.trim());
+        const ruleSets = [];
+
+        // Iterar através de todos os conjuntos de campos
+        $('.ruleSet').each(function() {
+            const type = $(this).find('.form-control#type').val();
+            const minCP = $(this).find('.form-control#minCP').val();
+            const maxCP = $(this).find('.form-control#maxCP').val();
+
+            // Construir a regra para este conjunto
+            let rule = '';
+            if (type !== 'all') {
+                rule += `type:${type} `;
+            }
+            if (minCP !== '') {
+                rule += `cp:${minCP}-${maxCP} `;
+            }
+
+            ruleSets.push(rule.trim());
+        });
+
+        // Unir todas as regras dos conjuntos
+        const criteria = ruleSets.join(', ');
+
+        $('#searchCriteria').val(criteria);
     }
-    
-    // Trigger the generation function whenever any form element changes
-    $('select, input').on('change', function() {
+
+    $('#generateButton').on('click', function() {
         generateSearchCriteria();
     });
-    
-    // Click event for the copy button
-    $('#copyButton').on('click', function() {
-        $('#searchCriteria').select();
-        document.execCommand('copy');
-        alert('Search criteria copied to clipboard!');
+
+    // Adicionar um novo conjunto de campos quando o botão "Add Rule Set" é clicado
+    $('#addRuleSetButton').on('click', function() {
+        const newRuleSet = $('.ruleSet:first').clone(); // Clona o primeiro conjunto
+        newRuleSet.find('select, input').val(''); // Limpa os valores dos campos clonados
+        $('#ruleSets').append(newRuleSet); // Adiciona o conjunto clonado ao DOM
     });
 });
