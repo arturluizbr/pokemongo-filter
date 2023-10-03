@@ -5,6 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Go Search Criteria Generator</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #FFE600; /* Pikachu yellow */
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background-color: #FFFFFF; /* White background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        h1 {
+            color: #E4402B; /* Pikachu red */
+        }
+
+        .btn-primary {
+            background-color: #E4402B; /* Pikachu red */
+            border-color: #E4402B;
+        }
+
+        .btn-primary:hover {
+            background-color: #C43323; /* Darker red on hover */
+            border-color: #C43323;
+        }
+
+        .btn-success {
+            background-color: #33691E; /* Pikachu green */
+            border-color: #33691E;
+        }
+
+        .btn-success:hover {
+            background-color: #275B16; /* Darker green on hover */
+            border-color: #275B16;
+        }
+
+        .form-control {
+            border-color: #E4402B; /* Pikachu red */
+        }
+
+        label {
+            color: #E4402B; /* Pikachu red */
+        }
+
+        #searchCriteria {
+            resize: none;
+        }
+
+        /* Additional styling for the generated search criteria */
+        #searchCriteria {
+            background-color: #FFFFE0; /* Pale yellow background for the text area */
+        }
+    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -89,7 +144,8 @@
                 $('#searchCriteria').val(criteria);
             }
 
-            $('#generateButton').on('click', function() {
+            // Acionar a função sempre que um campo for alterado
+            $('.form-control').on('change', function() {
                 generateSearchCriteria();
             });
 
