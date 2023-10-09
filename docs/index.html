@@ -5,80 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Go Search Criteria Generator</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #F2F2F2; /* Light gray background */
-            font-family: Arial, sans-serif;
-        }
-
-        .container {
-            background-color: #FFFFFF; /* White background */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-            margin-top: 20px;
-        }
-
-        h1 {
-            color: #E4402B; /* Pikachu red */
-        }
-
-        .btn-primary {
-            background-color: #E4402B; /* Pikachu red */
-            border-color: #E4402B;
-        }
-
-        .btn-primary:hover {
-            background-color: #C43323; /* Darker red on hover */
-            border-color: #C43323;
-        }
-
-        .btn-success {
-            background-color: #33691E; /* Pikachu green */
-            border-color: #33691E;
-        }
-
-        .btn-success:hover {
-            background-color: #275B16; /* Darker green on hover */
-            border-color: #275B16;
-        }
-
-        .form-control {
-            border-color: #E4402B; /* Pikachu red */
-        }
-
-        label {
-            color: #E4402B; /* Pikachu red */
-        }
-
-        #searchCriteria {
-            resize: none;
-        }
-
-        /* Additional styling for the generated search criteria */
-        #searchCriteria {
-            background-color: #FFFFE0; /* Pale yellow background for the text area */
-        }
-    </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Pokémon Go Search Criteria Generator</h1>
+    <div class="container mt-5">
+        <h1>Pokémon Go Search Criteria Generator</h1>
 
         <div id="ruleSets">
             <!-- O primeiro conjunto de campos -->
             <div class="ruleSet">
                 <div class="form-group">
                     <label for="type">Type:</label>
-                    <select class="form-control" id="type">
-                        <option value="all">All</option>
-                        <option value="fire">Fire</option>
-                        <option value="water">Water</option>
-                        <!-- Adicione mais tipos conforme necessário -->
-                    </select>
+                    <select class="form-control" id="type"></select>
                 </div>
 
                 <div class="form-row">
@@ -96,46 +36,105 @@
                     <label for="favorites">Favorites:</label>
                     <input type="text" class="form-control" id="favorites" placeholder="Favorites (e.g., !sombrosos, ultra beasts)">
                 </div>
+                
+                <!-- Botão de exclusão desativado para o conjunto inicial -->
+                <button type="button" class="btn btn-danger deleteButton" disabled>Delete</button>
             </div>
 
             <!-- Adicione mais conjuntos de campos para as outras regras aqui -->
 
         </div>
 
-        <button type="button" class="btn btn-primary" id="addRuleSetButton">Add Rule Set</button>
-        <button type="button" class="btn btn-success" id="generateButton">Generate Search Criteria</button>
+        <button type="button" class="btn btn-primary mt-3" id="addRuleSetButton">Add Rule Set</button>
+        <button type="button" class="btn btn-success mt-3" id="generateButton">Generate Search Criteria</button>
 
         <div class="form-group mt-4">
             <label for="searchCriteria">Search Criteria:</label>
             <textarea class="form-control" id="searchCriteria" readonly></textarea>
         </div>
+
+        <!-- Botão de cópia -->
+        <button type="button" class="btn btn-info" id="copyButton">Copy to Clipboard</button>
     </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(() => {
+            // Tipos de Pokémon
+            const pokemonTypes = [
+                'all',
+                'bug',
+                'dark',
+                'dragon',
+                'electric',
+                'fairy',
+                'fighting',
+                'fire',
+                'flying',
+                'ghost',
+                'grass',
+                'ground',
+                'ice',
+                'normal',
+                'poison',
+                'psychic',
+                'rock',
+                'steel',
+                'water',
+            ];
+
+            // Preencher o select de tipo com base na variável pokemonTypes
+            const typeSelect = $('#type');
+            pokemonTypes.forEach(type => {
+                typeSelect.append($('<option>', {
+                    value: type,
+                    text: type.charAt(0).toUpperCase() + type.slice(1)
+                }));
+            });
+
+            // Função para gerar a string de regra de Tipo
+            const generateTypeRule = type => type === 'all' ? '' : `type${type}&`;
+
+            // Função para gerar a string de regra de CP
+            const generateCPRule = (minCP, maxCP) => {
+                if (minCP === null || maxCP === null || minCP === '' || maxCP === '') {
+                    return '';
+                }
+                return `cp${minCP}-${maxCP}&`;
+            };
+
+            // Função para gerar a string de regra de Favoritos
+            const generateFavoritesRule = favorites => {
+                if (favorites === null || favorites === undefined || favorites === '') {
+                    return '';
+                }
+                return `${favorites}&`;
+            };
+
             function generateSearchCriteria() {
                 const ruleSets = [];
 
-                // Iterar através de todos os conjuntos de campos
-                $('.ruleSet').each(function() {
+                // Iterar através de todos os conjuntos de campos, excluindo o conjunto inicial
+                $('.ruleSet').each(function(index) {
                     const type = $(this).find('.form-control#type').val();
                     const minCP = $(this).find('.form-control#minCP').val();
                     const maxCP = $(this).find('.form-control#maxCP').val();
                     const favorites = $(this).find('.form-control#favorites').val().trim();
 
-                    // Construir a regra para este conjunto
-                    let rule = '';
-                    if (type !== 'all') {
-                        rule += `type${type}&`;
-                    }
-                    if (minCP !== '') {
-                        rule += `cp${minCP}-${maxCP}&`;
-                    }
-                    if (favorites !== '') {
-                        rule += `${favorites}&`;
+                    // Se for o primeiro conjunto, desative o botão "Delete"
+                    const deleteButton = $(this).find('.deleteButton');
+                    if (index === 0) {
+                        deleteButton.prop('disabled', true);
+                    } else {
+                        deleteButton.prop('disabled', false);
                     }
 
-                    ruleSets.push(rule.trim());
+                    // Construir a regra para este conjunto
+                    const typeRule = generateTypeRule(type);
+                    const cpRule = generateCPRule(minCP, maxCP);
+                    const favoritesRule = generateFavoritesRule(favorites);
+                    const rule = `${typeRule}${cpRule}${favoritesRule}`.trim();
+
+                    ruleSets.push(rule);
                 });
 
                 // Unir todas as regras dos conjuntos com ;
@@ -145,16 +144,37 @@
             }
 
             // Acionar a função sempre que um campo for alterado
-            $(document).on('change', '.form-control', function() {
-                generateSearchCriteria();
-            });
+            $(document).on('change', '.form-control', () => generateSearchCriteria());
 
             // Adicionar um novo conjunto de campos quando o botão "Add Rule Set" é clicado
-            $('#addRuleSetButton').on('click', function() {
+            $('#addRuleSetButton').on('click', () => {
                 const newRuleSet = $('.ruleSet:first').clone(); // Clona o primeiro conjunto
                 newRuleSet.find('select, input').val(''); // Limpa os valores dos campos clonados
+                newRuleSet.find('select').val('all'); // Seleciona automaticamente o tipo "All"
                 $('#ruleSets').append(newRuleSet); // Adiciona o conjunto clonado ao DOM
+                generateSearchCriteria(); // Atualiza o texto gerado
             });
+
+            // Excluir o conjunto de regras quando o botão "Delete" é clicado
+            $(document).on('click', '.deleteButton', function() {
+                $(this).closest('.ruleSet').remove(); // Remove o conjunto de regras
+                generateSearchCriteria(); // Atualiza o texto gerado
+            });
+
+            // Copiar o texto gerado para a área de transferência
+            $('#copyButton').on('click', function() {
+                const searchCriteria = $('#searchCriteria').val();
+                const textarea = document.createElement('textarea');
+                textarea.value = searchCriteria;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Texto copiado para a área de transferência!');
+            });
+
+            // Inicialmente, gera o texto com o conjunto de regras padrão
+            generateSearchCriteria();
         });
     </script>
 </body>
