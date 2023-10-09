@@ -36,15 +36,17 @@
                     <div class="col-md-12">
                         <label>Tags:</label>
                         <!-- Adicione radio buttons para cada tag a partir da variável pokemonTags -->
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="includeShadow">
-                            <label class="form-check-label" for="includeShadow">Include</label>
+                        <div class="form-check">
+                            <!-- Crie um conjunto de radio buttons para cada tag -->
+                            <div class="form-check">
+                                <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="includeShadow">
+                                <label class="form-check-label" for="includeShadow">Include Shadow</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="excludeShadow">
+                                <label class="form-check-label" for="excludeShadow">Exclude Shadow</label>
+                            </div>
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="excludeShadow">
-                            <label class="form-check-label" for="excludeShadow">Exclude</label>
-                        </div>
-                        <!-- Adicione mais radio buttons para outras tags a partir da variável pokemonTags -->
                     </div>
                 </div>
                 
@@ -98,6 +100,14 @@
                 'shadow',
                 'costume',
                 'shiny',
+                'legendary',
+                'mythical',
+                'baby',
+                'regional',
+                'lucky',
+                'purified',
+                'alolan',
+                'galarian',
                 // Adicione mais tags conforme necessário
             ];
 
@@ -114,18 +124,19 @@
             const tagsContainer = $('.form-row .col-md-12');
             pokemonTags.forEach(tag => {
                 const tagLabel = tag.charAt(0).toUpperCase() + tag.slice(1);
-                const includeTagRadio = $(`<div class="form-check form-check-inline">
-                            <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="include${tag}">
-                            <label class="form-check-label" for="include${tag}">Include ${tagLabel}</label>
-                        </div>`);
-
-                const excludeTagRadio = $(`<div class="form-check form-check-inline">
-                            <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="exclude${tag}">
-                            <label class="form-check-label" for="exclude${tag}">Exclude ${tagLabel}</label>
+                const includeTagRadio = $(`<div class="form-check">
+                            <!-- Crie um conjunto de radio buttons para cada tag -->
+                            <div class="form-check">
+                                <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="include${tag}">
+                                <label class="form-check-label" for="include${tag}">Include ${tagLabel}</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="exclude${tag}">
+                                <label class="form-check-label" for="exclude${tag}">Exclude ${tagLabel}</label>
+                            </div>
                         </div>`);
 
                 tagsContainer.append(includeTagRadio);
-                tagsContainer.append(excludeTagRadio);
             });
 
             function generateSearchCriteria() {
