@@ -32,9 +32,20 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="favorites">Favorites:</label>
-                    <input type="text" class="form-control" id="favorites" placeholder="Favorites (e.g., !sombrosos, ultra beasts)">
+                <div class="form-row">
+                    <div class="col-md-12">
+                        <label>Tags:</label>
+                        <!-- Adicione radio buttons para cada tag a partir da variável pokemonTags -->
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="includeShadow">
+                            <label class="form-check-label" for="includeShadow">Include</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input includeExcludeTags" type="radio" name="shadowTag" id="excludeShadow">
+                            <label class="form-check-label" for="excludeShadow">Exclude</label>
+                        </div>
+                        <!-- Adicione mais radio buttons para outras tags a partir da variável pokemonTags -->
+                    </div>
                 </div>
                 
                 <!-- Botão de exclusão desativado para o conjunto inicial -->
@@ -82,6 +93,14 @@
                 'water',
             ];
 
+            // Tags de Pokémon (incluindo as opções Incluir e Excluir)
+            const pokemonTags = [
+                'shadow',
+                'costume',
+                'shiny',
+                // Adicione mais tags conforme necessário
+            ];
+
             // Preencher o select de tipo com base na variável pokemonTypes
             const typeSelect = $('#type');
             pokemonTypes.forEach(type => {
@@ -91,24 +110,23 @@
                 }));
             });
 
-            // Função para gerar a string de regra de Tipo
-            const generateTypeRule = type => type === 'all' ? '' : `type${type}&`;
+            // Preencher as tags com radio buttons com base na variável pokemonTags
+            const tagsContainer = $('.form-row .col-md-12');
+            pokemonTags.forEach(tag => {
+                const tagLabel = tag.charAt(0).toUpperCase() + tag.slice(1);
+                const includeTagRadio = $(`<div class="form-check form-check-inline">
+                            <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="include${tag}">
+                            <label class="form-check-label" for="include${tag}">Include ${tagLabel}</label>
+                        </div>`);
 
-            // Função para gerar a string de regra de CP
-            const generateCPRule = (minCP, maxCP) => {
-                if (minCP === null || maxCP === null || minCP === '' || maxCP === '') {
-                    return '';
-                }
-                return `cp${minCP}-${maxCP}&`;
-            };
+                const excludeTagRadio = $(`<div class="form-check form-check-inline">
+                            <input class="form-check-input includeExcludeTags" type="radio" name="${tag}Tag" id="exclude${tag}">
+                            <label class="form-check-label" for="exclude${tag}">Exclude ${tagLabel}</label>
+                        </div>`);
 
-            // Função para gerar a string de regra de Favoritos
-            const generateFavoritesRule = favorites => {
-                if (favorites === null || favorites === undefined || favorites === '') {
-                    return '';
-                }
-                return `${favorites}&`;
-            };
+                tagsContainer.append(includeTagRadio);
+                tagsContainer.append(excludeTagRadio);
+            });
 
             function generateSearchCriteria() {
                 const ruleSets = [];
@@ -118,7 +136,6 @@
                     const type = $(this).find('.form-control#type').val();
                     const minCP = $(this).find('.form-control#minCP').val();
                     const maxCP = $(this).find('.form-control#maxCP').val();
-                    const favorites = $(this).find('.form-control#favorites').val().trim();
 
                     // Se for o primeiro conjunto, desative o botão "Delete"
                     const deleteButton = $(this).find('.deleteButton');
@@ -129,10 +146,22 @@
                     }
 
                     // Construir a regra para este conjunto
-                    const typeRule = generateTypeRule(type);
-                    const cpRule = generateCPRule(minCP, maxCP);
-                    const favoritesRule = generateFavoritesRule(favorites);
-                    const rule = `${typeRule}${cpRule}${favoritesRule}`.trim();
+                    let rule = '';
+                    rule += type !== 'all' ? `type${type}&` : '';
+                    rule += minCP !== '' && maxCP !== '' ? `cp${minCP}-${maxCP}&` : '';
+
+                    // Verificar as tags incluídas e excluídas
+                    pokemonTags.forEach(tag => {
+                        const includeTag = $(this).find(`#include${tag}`).prop('checked');
+                        const excludeTag = $(this).find(`#exclude${tag}`).prop('checked');
+                        if (includeTag || excludeTag) {
+                            if (includeTag) {
+                                rule += `${tag}&`;
+                            } else {
+                                rule += `!${tag}&`;
+                            }
+                        }
+                    });
 
                     ruleSets.push(rule);
                 });
@@ -144,13 +173,13 @@
             }
 
             // Acionar a função sempre que um campo for alterado
-            $(document).on('change', '.form-control', () => generateSearchCriteria());
+            $(document).on('change', '.form-control, .includeExcludeTags', () => generateSearchCriteria());
 
             // Adicionar um novo conjunto de campos quando o botão "Add Rule Set" é clicado
             $('#addRuleSetButton').on('click', () => {
                 const newRuleSet = $('.ruleSet:first').clone(); // Clona o primeiro conjunto
                 newRuleSet.find('select, input').val(''); // Limpa os valores dos campos clonados
-                newRuleSet.find('select').val('all'); // Seleciona automaticamente o tipo "All"
+                newRuleSet.find('.includeExcludeTags').prop('checked', false); // Desmarcar todos os radio buttons
                 $('#ruleSets').append(newRuleSet); // Adiciona o conjunto clonado ao DOM
                 generateSearchCriteria(); // Atualiza o texto gerado
             });
